@@ -11,11 +11,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayConfig {
 
-    @Value("${uri[0]}")
+    @Value("${uri}")
     private String customerUrI;
-
-    @Value("${uri[1]}")
-    private String robotUrI;
 
     public GatewayConfig() {
         LogBack.setLog(GatewayConfig.class);
@@ -25,6 +22,7 @@ public class GatewayConfig {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         LogBack.log.info("{}","initializing route locator config routes");
         // Now i can access 8888/customer/reads,read,create,update,delete
+        /*
         return builder
                 .routes()
                 .route("customer optional", routeC -> routeC
@@ -32,9 +30,15 @@ public class GatewayConfig {
                                 .filters(filter -> filter.prefixPath("/api"))
                                 .uri(customerUrI)
                 )
-                .route("robot optional" , routeR -> routeR
-                        .path("/robot/**")
-                        .uri(robotUrI)
+                .build();
+        */
+        // Or if you want prefix as /api just add the full path on path() method and remove filter
+        return builder
+                .routes()
+                .route("customer optional", routeC ->
+                        routeC
+                        .path("/api/customer/**")
+                        .uri(customerUrI)
                 )
                 .build();
     }
